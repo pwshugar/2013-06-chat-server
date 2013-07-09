@@ -21,7 +21,7 @@ exports.handleRequest = function(request, response) {
   var qs = require('querystring');
 
   var statusCode;
-
+  var headers;
 
   if (request.method === 'POST') {
     statusCode = 302;
@@ -32,23 +32,21 @@ exports.handleRequest = function(request, response) {
     request.on('end', function () {
     result.push(qs.parse(body)); //use JSON.parse for chat client.
     });
+    headers = defaultCorsHeaders;
+    headers['Content-Type'] = "text/plain";
+    response.writeHead(statusCode, headers);
+    response.end('\n');
   } else {
     if(request.url !== 'http://127.0.0.1:8080/classes/messages' && request.url !== 'http://127.0.0.1:8080/classes/room1'){
       statusCode = 404;
-      console.log('the url',request.url);
-      console.log('Does url !== message', request.url !== 'http://127.0.0.1:8080/classes/messages');
-      console.log('Does url !== room1', request.url !== 'http://127.0.0.1:8080/classes/room1');
+
     } else {
       statusCode = 200;
     }
+      headers = defaultCorsHeaders;
+      headers['Content-Type'] = "text/plain";
+      response.writeHead(statusCode, headers);
+      response.end(JSON.stringify(result));
   }
 
-
-
-  var headers = defaultCorsHeaders;
-  headers['Content-Type'] = "text/plain";
-  response.writeHead(statusCode, headers);
-
-  console.log("this is result",JSON.stringify(result));
-  response.end(JSON.stringify(result));
 };
