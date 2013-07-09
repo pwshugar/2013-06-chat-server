@@ -16,18 +16,22 @@ exports.handleRequest = function(request, response) {
   // var pathname = url.parse(request.url).pathname;
   console.log("Serving request type " + request.method + " for url " + request.url);
 
-  var statusCode = 200;
+
+  var statusCode;
+  if (request.method === 'POST'){
+    statusCode = 302;
+  } else {
+    statusCode = 200;
+  }
 
   var headers = defaultCorsHeaders;
   headers['Content-Type'] = "text/plain";
   response.writeHead(statusCode, headers);
 
-  var data = {
-    results: [{
-      username: 'Sonomi',
-      text: 'Hello'
-    }]
-  };
+  var data = [{
+    username: "Jono",
+    message: "Do my bidding!"
+  }];
 
 
   response.end(JSON.stringify(data));
