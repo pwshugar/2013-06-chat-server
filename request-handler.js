@@ -12,27 +12,40 @@ var defaultCorsHeaders = {
   "access-control-max-age": 10 // Seconds.
 };
 
+var result = [];
+
 exports.handleRequest = function(request, response) {
   // var pathname = url.parse(request.url).pathname;
   console.log("Serving request type " + request.method + " for url " + request.url);
 
+  var qs = require('querystring');
 
-  var statusCode;
-  if (request.method === 'POST'){
-    statusCode = 302;
-  } else {
-    statusCode = 200;
-  }
+  var statusCode = 200;
+
+  // var result = [];
+
+      if (request.method === 'POST') {
+          var body = '';
+          request.on('data', function (data) {
+              body += data;
+          });
+          request.on('end', function () {
+
+          var key = JSON.parse(Object.keys(qs.parse(body)));
+          result.push(key);
+          console.log(result);
+          // console.log(data);
+          // data.splice(0,1);
+          // var keys = Object.keys(data[0]);
+          // console.log(keys);
+          });
+      }
+
 
   var headers = defaultCorsHeaders;
   headers['Content-Type'] = "text/plain";
   response.writeHead(statusCode, headers);
 
-  var data = [{
-    username: "Jono",
-    message: "Do my bidding!"
-  }];
 
-
-  response.end(JSON.stringify(data));
+  response.end(JSON.stringify(result));
 };
