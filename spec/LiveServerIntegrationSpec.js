@@ -16,12 +16,15 @@ describe("Live Node Chat Server", function() {
                message: "Do my bidding!"}
             },
            function(error, response, body) {
-             expect(response.statusCode).toEqual(201);
-             // Now if we request the log, that message 
+
+             expect(response.statusCode).toEqual(302);
+             // Now if we request the log, that message
+
              // we posted should be there:
              request("http://127.0.0.1:8080/classes/messages",
                      function(error, response, body) {
                        var messageLog = JSON.parse(body);
+                       console.log("this is body",body);
                        expect(messageLog[0].username).toEqual("Jono");
                        expect(messageLog[0].message).toEqual("Do my bidding!");
                        done();
